@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App | Flask Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+    <h1 class="title">🌤 Weather App</h1>
+
+    <form method="POST" class="weather-form">
+        <input type="text" name="city" placeholder="Enter City Name" required>
+        <div class="btn-group">
+            <button type="submit" class="search-btn">Search</button>
+            <button type="submit" name="clear" class="clear-btn">Clear</button>
+        </div>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if weather %}
+        <div class="weather-card">
+            <h2>{{ weather.city }}</h2>
+            <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png">
+            <p>🌡 Temperature: {{ weather.temperature }}°C</p>
+            <p>☁ Condition: {{ weather.description }}</p>
+            <p>💧 Humidity: {{ weather.humidity }}%</p>
+            <p>🌬 Wind Speed: {{ weather.wind }} m/s</p>
+        </div>
+    {% endif %}
+
+    {% if forecast %}
+        <h2 class="forecast-title">5 Day Forecast</h2>
+        <div class="forecast">
+            {% for day in forecast %}
+                <div class="forecast-card">
+                    <p>{{ day.date }}</p>
+                    <img src="http://openweathermap.org/img/wn/{{ day.icon }}@2x.png">
+                    <p>{{ day.temp }}°C</p>
+                    <p>{{ day.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Pass weather condition to JS -->
+{% if weather %}
+<script>
+    const weatherCondition = "{{ weather.main }}";
+</script>
+{% endif %}
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
